@@ -219,5 +219,5 @@ This project is created for educational purposes and demonstration of 2FA concep
 This is an educational demo project. Feel free to fork and enhance for learning purposes!
 
 **Created by**: ASHUTOSH KUMAR  
-**Course**: Computer Science/Software Engineering  
+**Course**: Computer Science 
 **Date**: August 2025
