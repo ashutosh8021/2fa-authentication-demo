@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - 2FA Demo{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🎉 Welcome to Your Dashboard</h1>
+    <p>You've successfully logged in with 2FA!</p>
+</div>
+
+<div class="security-badge">
+    <strong>✅ Authenticated:</strong> Your identity has been verified with 2FA
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="flash-message flash-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+    <h3 style="color: #333; margin-bottom: 1rem;">👤 User Information</h3>
+    <div style="display: grid; gap: 0.5rem;">
+        <p><strong>Username:</strong> {{ username }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Authentication:</strong> <span style="color: #28a745;">✓ 2FA Verified</span></p>
+        <p><strong>Session:</strong> <span style="color: #28a745;">Active</span></p>
+    </div>
+</div>
+
+<div style="background: #e8f5e8; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #28a745;">
+    <h4 style="color: #155724; margin-bottom: 0.5rem;">🔐 Security Features Demonstrated:</h4>
+    <ul style="margin-left: 1rem; color: #155724;">
+        <li>Username/Password authentication (First Factor)</li>
+        <li>Email OTP verification (Second Factor)</li>
+        <li>Time-limited OTP codes (5-minute expiry)</li>
+        <li>Single-use OTP codes</li>
+        <li>Secure session management</li>
+    </ul>
+</div>
+
+<div style="display: grid; gap: 0.5rem;">
+    <a href="{{ url_for('logout') }}" class="btn" style="text-decoration: none; text-align: center;">
+        🚪 Logout
+    </a>
+</div>
+
+<div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; font-size: 0.8rem;">
+    <strong>🎓 Educational Note:</strong> This demonstrates how 2FA adds an extra layer of security. 
+    Even if someone obtains your password, they would still need access to your email to complete the login.
+</div>
+{% endblock %}

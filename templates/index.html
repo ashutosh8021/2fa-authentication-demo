@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}2FA Demo - Home{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🔐 2FA Demo App</h1>
+    <p>Secure authentication with Two-Factor Authentication</p>
+</div>
+
+<div class="security-badge">
+    <strong>🛡️ Enhanced Security:</strong> This app demonstrates 2FA using email OTP verification
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="flash-message flash-error">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div style="text-align: center; margin-bottom: 2rem;">
+    <h2>Welcome to 2FA Demo</h2>
+    <p style="margin: 1rem 0; color: #666;">
+        Experience secure login with username/password + email OTP verification
+    </p>
+</div>
+
+<a href="{{ url_for('login') }}" class="btn" style="text-decoration: none; display: block; text-align: center;">
+    🔑 Login
+</a>
+
+<div class="links">
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a></p>
+</div>
+
+<div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 5px; font-size: 0.8rem; color: #666;">
+    <h4>How it works:</h4>
+    <ol style="margin-left: 1rem; margin-top: 0.5rem;">
+        <li>Enter username and password</li>
+        <li>Receive OTP code via email</li>
+        <li>Enter OTP to complete login</li>
+        <li>Access your secure dashboard</li>
+    </ol>
+</div>
+{% endblock %}

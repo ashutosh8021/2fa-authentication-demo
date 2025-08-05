@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Login - 2FA Demo{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🔑 Login</h1>
+    <p>Enter your credentials to continue</p>
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                {% if 'successful' in message or 'email' in message %}
+                    <div class="flash-message flash-success">{{ message }}</div>
+                {% else %}
+                    <div class="flash-message flash-error">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    
+    <button type="submit" class="btn">Login</button>
+</form>
+
+<div class="links">
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a></p>
+    <p><a href="{{ url_for('home') }}">← Back to Home</a></p>
+</div>
+
+<div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; font-size: 0.8rem;">
+    <strong>ℹ️ Demo Note:</strong> After entering your credentials, you'll receive an OTP code. 
+    Check the console output for the simulated email with your verification code.
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Verify OTP - 2FA Demo{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>📱 Enter Verification Code</h1>
+    <p>Check your email for the 6-digit code</p>
+</div>
+
+<div class="security-badge">
+    <strong>🔒 Step 2 of 2:</strong> Enter the OTP code sent to your email
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                {% if 'successful' in message or 'sent' in message %}
+                    <div class="flash-message flash-success">{{ message }}</div>
+                {% else %}
+                    <div class="flash-message flash-error">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <div class="form-group">
+        <label for="otp_code">6-Digit Verification Code:</label>
+        <input type="text" id="otp_code" name="otp_code" class="otp-input" 
+               maxlength="6" pattern="[0-9]{6}" required 
+               placeholder="000000" autocomplete="off">
+        <small style="color: #666; font-size: 0.8rem;">Code expires in 5 minutes</small>
+    </div>
+    
+    <button type="submit" class="btn">Verify & Login</button>
+</form>
+
+<div class="links">
+    <p><a href="{{ url_for('resend_otp') }}">Didn't receive code? Resend OTP</a></p>
+    <p><a href="{{ url_for('login') }}">← Back to Login</a></p>
+</div>
+
+<div style="margin-top: 2rem; padding: 1rem; background: #e8f4fd; border: 1px solid #bee5eb; border-radius: 5px; font-size: 0.8rem;">
+    <strong>📧 Check Console:</strong> In this demo, the OTP is displayed in the server console. 
+    In a real application, it would be sent to your email address.
+</div>
+
+<script>
+// Auto-focus on OTP input and format as user types
+document.getElementById('otp_code').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    if (value.length <= 6) {
+        e.target.value = value;
+    }
+});
+
+// Auto-submit when 6 digits are entered
+document.getElementById('otp_code').addEventListener('input', function(e) {
+    if (e.target.value.length === 6) {
+        // Optional: Auto-submit after a short delay
+        setTimeout(() => {
+            if (e.target.value.length === 6) {
+                e.target.form.submit();
+            }
+        }, 500);
+    }
+});
+</script>
+{% endblock %}
