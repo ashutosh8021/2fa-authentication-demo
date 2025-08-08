@@ -15,12 +15,15 @@ This project demonstrates a practical implementation of Two-Factor Authenticatio
 
 - 🔐 **Username/Password Authentication** (First Factor)
 - 📧 **Email OTP Verification** (Second Factor)
+- 🔑 **Password Reset with Email OTP** (Forgot Password)
+- ⚡ **Real Email Delivery via SendGrid** (Professional grade)
 - ⏰ **Time-limited OTP Codes** (5-minute expiry)
 - 🔒 **Single-use OTP Codes**
 - 💾 **SQLite Database** for user storage
 - 🎨 **Modern Web Interface**
 - 🛡️ **Secure Session Management**
-- ✉️ **Real SMTP Email Integration** (with console fallback)
+- 📱 **Mobile-Responsive Email Templates**
+- 🔄 **Fallback Console Mode** for testing
 
 ## 🔄 How It Works
 
@@ -31,12 +34,15 @@ This project demonstrates a practical implementation of Two-Factor Authenticatio
 │ Username + Email│───▶│Username+Password│───▶│   OTP Verify    │
 │   + Password    │    │   Validation    │    │   Email Code    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-                                                        │
-┌─────────────────┐    ┌─────────────────┐             │
-│   Dashboard     │◄───│  Session Start  │◄────────────┘
-│   Protected     │    │   2FA Complete  │
-│    Content      │    │                 │
-└─────────────────┘    └─────────────────┘
+                                 │                        │
+┌─────────────────┐              │                        │
+│ Forgot Password │◄─────────────┘                        │
+│                 │                                       │
+│ Email → Reset   │               ┌─────────────────┐     │
+│ Code → New Pass │               │   Dashboard     │◄────┘
+└─────────────────┘               │   Protected     │
+                                  │    Content      │
+                                  └─────────────────┘
 ```
 
 ### Authentication Flow:
@@ -46,11 +52,19 @@ This project demonstrates a practical implementation of Two-Factor Authenticatio
 4. **Login Step 2**: User enters the OTP code within 5 minutes
 5. **Access Granted**: User gains access to the protected dashboard with active session
 
+### Password Reset Flow:
+1. **Forgot Password**: User clicks "Forgot Password" and enters email
+2. **Reset Email**: System sends 6-digit reset code (valid 15 minutes)
+3. **Verify Reset Code**: User enters the reset code
+4. **New Password**: User creates a new password
+5. **Login**: User can now login with the new password
+
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.8 or higher
 - pip package manager
+- SendGrid account (free - 100 emails/day)
 
 ### Installation Steps
 
@@ -72,18 +86,26 @@ This project demonstrates a practical implementation of Two-Factor Authenticatio
    pip install -r requirements.txt
    ```
 
-4. **Configure Email (Optional)**:
+4. **Setup SendGrid (For Real Emails)**:
    ```bash
-   copy config_template.py config.py
-   # Edit config.py with your email settings
+   # Copy SendGrid config template
+   copy config_sendgrid.py config.py
+   # Edit config.py with your SendGrid settings
+   ```
+   
+   📖 **Detailed setup guide**: See [SENDGRID_SETUP.md](SENDGRID_SETUP.md)
+
+5. **Test Email Configuration**:
+   ```bash
+   python test_sendgrid.py
    ```
 
-5. **Run the Application**:
+6. **Run the Application**:
    ```bash
    python app.py
    ```
 
-6. **Access the Application**:
+7. **Access the Application**:
    Open your browser and go to: `http://localhost:5000`
 
 ## Usage
@@ -93,9 +115,22 @@ This project demonstrates a practical implementation of Two-Factor Authenticatio
 2. Enter username, email, and password
 3. Click "Create Account"
 
-### Logging In
+### Logging In with Real Emails
 1. Enter your username and password
-2. **For Real Email**: Check your email inbox for the OTP code
+2. **Check your email inbox** for professional OTP email
+3. Enter the 6-digit code within 5 minutes
+4. Access your secure dashboard
+
+### Demo Mode (No Email Setup)
+If SendGrid is not configured, the app will show OTP codes in the console for testing.
+
+### Password Reset Feature
+1. Click "Forgot Password" on login page
+2. Enter your email address
+3. Check your email for the 6-digit reset code
+4. Enter the reset code (expires in 15 minutes)
+5. Create your new password
+6. Login with your new credentials
 3. **For Demo Mode**: Check the **console output** for the OTP code (simulated email)
 4. Enter the 6-digit OTP code
 5. Access your secure dashboard
@@ -137,16 +172,49 @@ This project demonstrates a practical implementation of Two-Factor Authenticatio
 | `expires_at` | TIMESTAMP | OTP expiration time |
 | `used` | BOOLEAN | Single-use flag |
 
-## 📁 Project Structure
+## � Email Integration
+
+### SendGrid Professional Email Delivery
+This application uses **SendGrid** for reliable, professional email delivery:
+
+#### Benefits of SendGrid:
+- ✅ **99% delivery rate** - emails reach inbox, not spam
+- ✅ **Instant delivery** - OTP codes arrive in seconds
+- ✅ **Professional templates** - beautiful HTML emails
+- ✅ **Free tier** - 100 emails/day forever
+- ✅ **Production ready** - used by major companies
+- ✅ **Analytics dashboard** - track email performance
+
+#### Email Features:
+- 📱 **Mobile responsive** email templates
+- 🎨 **Professional design** with gradients and styling
+- 🔐 **Clear OTP display** with large, readable codes
+- ⏰ **Expiry warnings** and security messaging
+- 🛡️ **Branded emails** with your app identity
+
+#### Setup Process:
+1. **Sign up** for free SendGrid account
+2. **Get API key** from SendGrid dashboard
+3. **Verify sender** email address
+4. **Configure app** with your credentials
+5. **Test integration** with provided test script
+
+📖 **Complete setup guide**: [SENDGRID_SETUP.md](SENDGRID_SETUP.md)
+
+### Fallback Console Mode
+If SendGrid is not configured, the app automatically falls back to console output for development and testing.
+
+## �📁 Project Structure
 
 ```
 2fa_demo/
-├── 📄 app.py                    # Main Flask application (259 lines)
-├── 📄 requirements.txt          # Python dependencies
-├── 📄 config_template.py        # Email configuration template
-├── 📄 EMAIL_SETUP.md           # Email setup instructions
+├── 📄 app.py                    # Main Flask application
+├── 📄 requirements.txt          # Dependencies (includes SendGrid)
+├── 📄 config_sendgrid.py        # SendGrid configuration template
+├── 📄 config_env.py             # Environment-based config
+├── 📄 test_sendgrid.py          # Email testing script
+├── 📄 SENDGRID_SETUP.md        # Complete setup guide
 ├── 📄 users.db                 # SQLite database (auto-created)
-├── 📄 .gitignore               # Git ignore rules
 ├── 📂 templates/               # HTML templates
 │   ├── 📄 base.html            # Base template with styling
 │   ├── 📄 index.html           # Home page
@@ -219,5 +287,5 @@ This project is created for educational purposes and demonstration of 2FA concep
 This is an educational demo project. Feel free to fork and enhance for learning purposes!
 
 **Created by**: ASHUTOSH KUMAR  
-**Course**: Computer Science/Software Engineering  
+**Course**: Computer Science 
 **Date**: August 2025

@@ -24,8 +24,8 @@
 
 <form method="POST">
     <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <label for="username">Username or Email:</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username or email" required>
     </div>
     
     <div class="form-group">
@@ -37,12 +37,13 @@
 </form>
 
 <div class="links">
+    <p>Forgot your password? <a href="{{ url_for('forgot_password') }}">Reset it here</a></p>
     <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a></p>
     <p><a href="{{ url_for('home') }}">← Back to Home</a></p>
 </div>
 
-<div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; font-size: 0.8rem;">
-    <strong>ℹ️ Demo Note:</strong> After entering your credentials, you'll receive an OTP code. 
-    Check the console output for the simulated email with your verification code.
+<div style="margin-top: 2rem; padding: 1rem; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 5px; font-size: 0.8rem;">
+    <strong>🔐 2FA Security:</strong> After entering your credentials, you'll receive a 6-digit OTP code via email. 
+    This adds an extra layer of security to your account.
 </div>
 {% endblock %}

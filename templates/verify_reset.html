@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Reset Code - 2FA Demo{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>🔐 Verify Reset Code</h1>
+    <p>Enter the 6-digit code sent to {{ email }}</p>
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                {% if 'sent' in message %}
+                    <div class="flash-message flash-success">{{ message }}</div>
+                {% else %}
+                    <div class="flash-message flash-error">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <div class="form-group">
+        <label for="reset_token">Reset Code:</label>
+        <input type="text" id="reset_token" name="reset_token" maxlength="6" 
+               pattern="[0-9]{6}" title="Please enter the 6-digit code" required 
+               style="font-size: 1.5rem; text-align: center; letter-spacing: 0.5rem;">
+        <small style="color: #666; font-size: 0.8rem;">Enter the 6-digit code from your email</small>
+    </div>
+    
+    <button type="submit" class="btn">Verify Code</button>
+</form>
+
+<div class="links">
+    <p>Didn't receive the code? <a href="{{ url_for('resend_reset') }}">Resend code</a></p>
+    <p>Wrong email? <a href="{{ url_for('forgot_password') }}">← Try again</a></p>
+    <p><a href="{{ url_for('login') }}">← Back to Login</a></p>
+</div>
+
+<div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; font-size: 0.8rem;">
+    <strong>⏰ Important:</strong> Your reset code will expire in 15 minutes for security. 
+    Check your spam folder if you don't see the email.
+</div>
+
+<script>
+// Auto-focus on the reset code input
+document.getElementById('reset_token').focus();
+
+// Auto-submit when 6 digits are entered
+document.getElementById('reset_token').addEventListener('input', function(e) {
+    if (e.target.value.length === 6) {
+        // Small delay to allow user to see the complete code
+        setTimeout(() => {
+            if (e.target.value.length === 6) {
+                e.target.form.submit();
+            }
+        }, 500);
+    }
+});
+</script>
+{% endblock %}
